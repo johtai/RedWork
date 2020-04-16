@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 from data import db_session
 from data.db_session import SqlAlchemyBase
-from data.__all_models import *
+from data.__all_models import User, Jobs
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from wtforms.fields.html5 import EmailField
@@ -19,18 +19,18 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
+    name = StringField('Имя и фамилия', validators=[DataRequired()])
     email = StringField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
-    name = StringField('Имя пользователя', validators=[DataRequired()])
-    about = TextAreaField("Немного о себе")
+    about = TextAreaField("Информация о себе")
     submit = SubmitField('Войти')
 
 
 class JobsForm(FlaskForm):
     title = StringField('Название', validators=[DataRequired()])
     content = TextAreaField("Содержание")
-    is_private = BooleanField("Личное")
+    is_private = BooleanField("Приватность")
     submit = SubmitField('Применить')
 
 
@@ -147,7 +147,7 @@ def edit_jobs(id):
     form = JobsForm()
     if request.method == "GET":
         session = db_session.create_session()
-        jobs = session.query(Jobs).filter(Jobs.id == id, 
+        jobs = session.query(Jobs).filter(Jobs.id == id,
                                           Jobs.user == current_user).first()
         if jobs:
             form.title.data = jobs.title
@@ -157,7 +157,7 @@ def edit_jobs(id):
             abort(404)
     if form.validate_on_submit():
         session = db_session.create_session()
-        jobs = session.query(Jobs).filter(Jobs.id == id, 
+        jobs = session.query(Jobs).filter(Jobs.id == id,
                                           Jobs.user == current_user).first()
         if jobs:
             jobs.title = form.title.data
@@ -168,6 +168,14 @@ def edit_jobs(id):
         else:
             abort(404)
     return render_template('jobs.html', title='Редактирование новости', form=form)
+
+
+@app.route('/user/<int:id>', methods=['GET', 'POST'])
+@login_required
+def open_user(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    return render_template('profile.html', user=user)
 
 
 @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])
