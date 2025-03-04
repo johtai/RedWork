@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for item in jobs%}
+<br>
+<div class="col-md6 border rounded" style="padding: 1px 5px 5px 5px">
+    <h3>{{item.title}}</h3>
+    <h5>
+        {{item.content}}
+    </h5>
+    <div>
+        <a>Пользователь </a><a href="/user/{{ item.request }}">{{ item.request_name }}</a><a> хочет выполнить эту работу</a><br>
+        Дата написания: {{item.created_date}}<br>
+        Оплата: {{item.payment}} ₽
+    </div>
+    <br>
+    <div>
+        <a href="/requests_endorse/{{ item.id }}{{ item.request }}" class="btn btn-warning">Одобрить</a>
+        <a href="/requests_cancel/{{ item.id }}" class="btn btn-danger">Отклонить</a>
+    </div>
+
+{% endfor %}
+{% endblock %}

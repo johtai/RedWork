@@ -21,7 +21,7 @@ class User(SqlAlchemyBase, UserMixin):
                                      default=datetime.datetime.today().strftime("%d.%m.%Y %H:%M"))
     jobs = orm.relation("Jobs", back_populates='user')
     is_ava = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    # balance = sqlalchemy.Column(sqlalchemy.Float, default=0)
+    balance = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
