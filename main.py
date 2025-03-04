@@ -351,6 +351,30 @@ def question():
     return render_template('question.html', form=form, title='Вопросы и ответы')
 
 
+@app.route('/user/<int:id>/complete')
+def info_complete(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    jobs = session.query(Jobs).filter(Jobs.request == id)
+    return render_template('profile_info.html', title='complete', jobs=jobs, user=user)
+
+
+@app.route('/user/<int:id>/jobs')
+def info_jobs(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    jobs = session.query(Jobs).filter(Jobs.user_id == id)
+    return render_template('profile_info.html', title='jobs', jobs=jobs, user=user)
+
+
+@app.route('/user/<int:id>/jobs')
+def info_jobs(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == id).first()
+    jobs = session.query(Jobs).filter(Jobs.user_id == id)
+    return render_template('profile_info.html', title='jobs', jobs=jobs, user=user)
+
+
 if __name__ == '__main__':
     db_session.global_init("db/redwork.sqlite")
     app.run(port=8080, host='127.0.0.1')
