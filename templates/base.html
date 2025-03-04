@@ -14,16 +14,22 @@
 <body>
 <header>
     <nav class="navbar navbar-light bg-light">
-        <b><font size="6" color="cc0605">Red</font><font size="6">Work</font></b>
-            <a style="border: 2px double lightgray" class='btn btn-default' href="">Услуги</a>
-            <a style="border: 2px double lightgray" class='btn btn-default' href="">Работы</a>
-            <a style="border: 2px double lightgray" class='btn btn-default' href="">Форум</a>
-            <a style="border: 2px double lightgray" class='btn btn-default' href="">Помощь</a>
+        <a href="/"><b><font size="6" color="cc0605">Red</font><font color="000000" size="6">Work</font></b></a>
+
+                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Услуги</font></a>
+                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Работы</font></a>
+                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Форум</font></a>
+                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Помощь</font></a>
+
     </nav>
-    <nav class="navbar navbar-light bg-light">
+    <hr>
+    <nav class="navbar">
         {% if current_user.is_authenticated: %}
             <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
+            <a style="background: #a4d433" class='btn btn-default' href="">Категории</a>
             <a style="background: #c4ca76" class='btn btn-default' href="">Мои работы</a>
+            <a style="background: #c4ca76" class='btn btn-default' href="">Отложенные</a>
+            <a style="background: #aca16f" class='btn btn-default' href="">Заявки</a>
             <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
             <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% else %}
@@ -31,11 +37,20 @@
             <a class="btn btn-success" href="/login">Войти</a>
         {% endif %}
     </nav>
+    <hr>
 
 </header>
 
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>
+<br><br>
+    <nav class="navbar navbar-light bg-light">
+        <p>ВСЕ ПРАВА ЗАЩИЩЕНЫ<br>© 1917 – 2020 «RedWork»</p>
+        <p align="right">Исключительное право на программный код «RedWork», принадлежат АНО ДПО «RedWork».
+            <br>
+            Воспроизведение, копирование, распространение и иное использование программы и материалов недопустимо.<br> Шутка =)
+        </p>
+    </nav>
 </body>
 </html>

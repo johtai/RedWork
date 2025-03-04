@@ -130,7 +130,8 @@ def reqister():
             file.thumbnail((128, 128))
             file.save(path)
 
-        return redirect('/login')
+        login_user(user, remember=True)
+        return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
 
 
@@ -196,7 +197,8 @@ def edit_jobs(id):
 def open_user(id):
     session = db_session.create_session()
     user = session.query(User).filter(User.id == id).first()
-    return render_template('profile.html', user=user)
+    jobs = user.jobs
+    return render_template('profile.html', user=user, jobs=jobs)
 
 
 @app.route('/jobs_delete/<int:id>', methods=['GET', 'POST'])

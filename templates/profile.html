@@ -5,13 +5,13 @@
 <hr>
 <table>
     <tr valign="top">
-        {% if current_user.is_ava %}
-        <td><img src="../static/img/{{ current_user.id }}.png"></td>
+        {% if user.is_ava %}
+        <td><img src="../static/img/{{ user.id }}.png"></td>
         {% else %}
-        <td><img src="{{ current_user.avatar(128)}}"></td>
+        <td><img src="{{ user.avatar(128)}}"></td>
         {% endif %}
         <td>
-            <h1>{{ user.name }}</h1>
+            <h2>{{ user.name }}</h2>
             <p>{{ user.about }}</p>
             <p>Дата регистрации: {{ user.created_date }}</p>
         </td>
@@ -21,25 +21,9 @@
 <br>
 <h4>Работы пользователя:</h4>
 <br>
-{% if user.jobs %}
-{% for item in user.jobs%}
-<div class="col-md6 border rounded">
-    <h2>{{item.title}}</h2>
-    <div>
-        {{item.content}}
-    </div>
-    <div>
-        Дата написания - {{item.created_date}}
-    </div>
-    {% if current_user.is_authenticated and current_user == item.user %}
-    <div>
-        <a href="/jobs/{{ item.id }}" class="btn btn-warning">Изменить</a>
-        <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">Удалить</a>
-    </div>
-    {% endif %}
-{% endfor %}
+{% if jobs %}
+    {% include "jobs_list.html" %}
 {% else %}
     <h5>Пользователь ещё не разместил свои работы</h5>
 {% endif %}
-</div>
 {% endblock %}
