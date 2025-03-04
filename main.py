@@ -69,6 +69,7 @@ def index():
 
 @app.route('/my_jobs')
 def my_jobs():
+    session = db_session.create_session()
     jobs = session.query(Jobs).filter(
         (Jobs.user == current_user) | (Jobs.is_private == True))[::-1]
     return render_template("index.html", jobs=jobs, title='Мои работы')

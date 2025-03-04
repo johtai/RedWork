@@ -7,6 +7,9 @@
 {% elif title == "Отложенные" and not jobs %}<br>
 <h5>Вы еще не откладывали работы</h5>
 <br><br><br><br><br><br><br><br>
+{% elif title == "Мои работы" and not jobs %}<br>
+<h5>Вы еще не публиковали работы</h5>
+<br><br><br><br><br><br><br><br>
 {% endif %}
 {% include "jobs_list.html"%}
 {% endblock %}
