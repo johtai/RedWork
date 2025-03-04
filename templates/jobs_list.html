@@ -1,7 +1,11 @@
 {% for item in jobs%}
 <br>
 <div class="col-md6 border rounded" style="padding: 1px 5px 5px 5px">
-    <h3>{{item.title}}</h3>
+    {% if item.is_complete == 0%}
+    <h3>🔴 {{item.title}}</h3>
+    {% else %}
+    <h3>🟢 {{item.title}}</h3>
+    {% endif %}
     <h5>
         {{item.content}}
     </h5>
