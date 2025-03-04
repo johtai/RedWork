@@ -65,12 +65,12 @@ def reqister():
             about=form.about.data
         )
         user.set_password(form.password.data)
-        session.add(user)
-        session.commit()
 
         if request.files['file']:
             user.is_ava = True
             file = request.files['file']
+            if not os.path.isdir(app.config['UPLOAD_FOLDER']):
+                os.mkdir(app.config["UPLOAD_FOLDER"])
             path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.id}.png')
             file.save(path)
             file.close()
@@ -79,6 +79,8 @@ def reqister():
             file.thumbnail((128, 128))
             file.save(path)
 
+        session.add(user)
+        session.commit()
         login_user(user, remember=True)
         return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
