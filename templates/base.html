@@ -3,28 +3,37 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>RedWork - сервис по поиску и предоставлению работы</title>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <title>{{title}}</title>
+    <link rel="shortcut icon" href='https://yt3.ggpht.com/a/AGF-l79K11Q_IfhZ-Up-Nz9RawnLFosCJ8v0KRuoiA=s900-c-k-c0xffffffff-no-rj-mo'>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-light bg-light">
         <b><font size="6" color="cc0605">Red</font><font size="6">Work</font></b>
-        {% if current_user.is_authenticated %}
-            <a href="jobs" class="btn btn-secondary">Добавить новость</a>
-            <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+            <a style="border: 2px double lightgray" class='btn btn-default' href="">Услуги</a>
+            <a style="border: 2px double lightgray" class='btn btn-default' href="">Работы</a>
+            <a style="border: 2px double lightgray" class='btn btn-default' href="">Форум</a>
+            <a style="border: 2px double lightgray" class='btn btn-default' href="">Помощь</a>
+    </nav>
+    <nav class="navbar navbar-light bg-light">
+        {% if current_user.is_authenticated: %}
+            <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
+            <a style="background: #c4ca76" class='btn btn-default' href="">Мои работы</a>
+            <a style="background: #aaaaaa" class='btn btn-default' href=''>Профиль</a>
+            <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% else %}
-            <p>
-                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
-                <a class="btn btn-success" href="/login">Войти</a>
-            </p>
+            <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+            <a class="btn btn-success" href="/login">Войти</a>
         {% endif %}
     </nav>
+
 </header>
-<!-- Begin page content -->
+
 <main role="main" class="container">
     {% block content %}{% endblock %}
 </main>

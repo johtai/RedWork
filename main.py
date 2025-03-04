@@ -3,10 +3,12 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 from data import db_session
+from data.db_session import SqlAlchemyBase
 from data.__all_models import *
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from wtforms.fields.html5 import EmailField
+import sqlalchemy
 
 
 class LoginForm(FlaskForm):
@@ -32,6 +34,21 @@ class JobsForm(FlaskForm):
     submit = SubmitField('Применить')
 
 
+class Category(SqlAlchemyBase):
+    __tablename__ = 'category'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, 
+                           autoincrement=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+
+association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
+    sqlalchemy.Column('jobs', sqlalchemy.Integer, 
+                      sqlalchemy.ForeignKey('jobs.id')),
+    sqlalchemy.Column('category', sqlalchemy.Integer, 
+                      sqlalchemy.ForeignKey('category.id'))
+)
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PASSWORD'
 
@@ -48,13 +65,14 @@ def load_user(user_id):
 @app.route('/')
 def index():
     session = db_session.create_session()
+    jobs = session.query(Jobs).filter(Jobs.is_private != True)
+    return render_template("index.html", jobs=jobs)
 
-    if current_user.is_authenticated:
-        jobs = session.query(Jobs).filter(
+
+@app.route('/my_jobs')
+def my_jobs():
+    jobs = session.query(Jobs).filter(
         (Jobs.user == current_user) | (Jobs.is_private != True))
-    else:
-        jobs = session.query(Jobs).filter(Jobs.is_private != True)
-
     return render_template("index.html", jobs=jobs)
 
 
@@ -165,7 +183,7 @@ def jobs_delete(id):
         abort(404)
     return redirect('/')
 
-    
+
 if __name__ == '__main__':
     db_session.global_init("db/blogs.sqlite")
     app.run(port=8080, host='127.0.0.1')
