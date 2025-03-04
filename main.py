@@ -71,12 +71,12 @@ def reqister():
             about=form.about.data
         )
         user.set_password(form.password.data)
-
-        session = db_session.create_session()
-        file = request.files['file']
+        print(1)
+        file = request.files['ava']
+        print(2)
         if file and allowed_file(file.filename):
+            print(3)
             user.is_ava = True
-            file = request.files['file']
             if not os.path.isdir(app.config['UPLOAD_FOLDER']):
                 os.mkdir(app.config["UPLOAD_FOLDER"])
             path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.name}.png')
@@ -87,7 +87,7 @@ def reqister():
             file = Image.open(path)
             file.thumbnail((128, 128))
             file.save(path)
-
+        print(4)
         session.add(user)
         session.commit()
         login_user(user, remember=True)
@@ -357,14 +357,6 @@ def info_complete(id):
     user = session.query(User).filter(User.id == id).first()
     jobs = session.query(Jobs).filter(Jobs.request == id)
     return render_template('profile_info.html', title='complete', jobs=jobs, user=user)
-
-
-@app.route('/user/<int:id>/jobs')
-def info_jobs(id):
-    session = db_session.create_session()
-    user = session.query(User).filter(User.id == id).first()
-    jobs = session.query(Jobs).filter(Jobs.user_id == id)
-    return render_template('profile_info.html', title='jobs', jobs=jobs, user=user)
 
 
 @app.route('/user/<int:id>/jobs')
