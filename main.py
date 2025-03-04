@@ -63,14 +63,14 @@ def load_user(user_id):
 @app.route('/')
 def index():
     session = db_session.create_session()
-    jobs = session.query(Jobs).filter(Jobs.is_private != True, Jobs.request == 0)
+    jobs = session.query(Jobs).filter(Jobs.is_private != True, Jobs.request == 0)[::-1]
     return render_template("index.html", jobs=jobs, title='Доступные работы')
 
 
 @app.route('/my_jobs')
 def my_jobs():
     jobs = session.query(Jobs).filter(
-        (Jobs.user == current_user) | (Jobs.is_private == True))
+        (Jobs.user == current_user) | (Jobs.is_private == True))[::-1]
     return render_template("index.html", jobs=jobs, title='Мои работы')
 
 
@@ -222,7 +222,7 @@ def set_request(id):
 @login_required
 def my_requests():
     session = db_session.create_session()
-    jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user)
+    jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user)[::-1]
     return render_template('requests.html', jobs=jobs, title='Мои запросы')
 
 
@@ -317,7 +317,7 @@ def edit_theme(id):
 @app.route('/forum')
 def forum():
     session = db_session.create_session()
-    themes = session.query(Theme).all()
+    themes = session.query(Theme).all()[::-1]
     return render_template('forum.html', themes=themes, title='Форум')
 
 
@@ -349,7 +349,7 @@ def defers():
     session = db_session.create_session()
     jobs = session.query(Jobs).all()
     user = session.query(User).filter(User.id == current_user.id).first()
-    jobs = session.query(Jobs).filter(Jobs.id.in_(list(map(lambda x: int(x), user.defers.split(',')[1:]))))
+    jobs = session.query(Jobs).filter(Jobs.id.in_(list(map(lambda x: int(x), user.defers.split(',')[1:]))))[::-1]
     return render_template('index.html', jobs=jobs, title='Отложенные')
 
 
