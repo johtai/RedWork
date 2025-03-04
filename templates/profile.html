@@ -5,7 +5,11 @@
 <hr>
 <table>
     <tr valign="top">
+        {% if current_user.is_ava %}
+        <td><img src="../static/img/{{ current_user.id }}.png"></td>
+        {% else %}
         <td><img src="{{ current_user.avatar(128)}}"></td>
+        {% endif %}
         <td>
             <h1>{{ user.name }}</h1>
             <p>{{ user.about }}</p>
@@ -13,7 +17,10 @@
         </td>
     </tr>
 </table>
-</hr>
+<hr>
+<br>
+<h4>Работы пользователя:</h4>
+<br>
 {% if user.jobs %}
 {% for item in user.jobs%}
 <div class="col-md6 border rounded">

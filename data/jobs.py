@@ -18,6 +18,7 @@ class Jobs(SqlAlchemyBase):
     members = sqlalchemy.Column(sqlalchemy.Integer, default=True)
     user_id = sqlalchemy.Column(sqlalchemy.Integer, 
                                 sqlalchemy.ForeignKey("users.id"))
+    payment = sqlalchemy.Column(sqlalchemy.Integer)
     user = orm.relation('User')
     categories = orm.relation("Category",
                           secondary="association",

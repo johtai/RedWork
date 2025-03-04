@@ -20,7 +20,7 @@ class User(SqlAlchemyBase, UserMixin):
     created_date = sqlalchemy.Column(sqlalchemy.String,
                                      default=datetime.datetime.today().strftime("%d.%m.%Y %H:%M"))
     jobs = orm.relation("Jobs", back_populates='user')
-
+    is_ava = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
 

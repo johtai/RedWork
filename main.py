@@ -5,10 +5,13 @@ from wtforms.validators import DataRequired
 from data import db_session
 from data.db_session import SqlAlchemyBase
 from data.__all_models import User, Jobs
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from wtforms.fields.html5 import EmailField
 import sqlalchemy
+from PIL import Image
+import os
+from werkzeug.utils import secure_filename
 
 
 class LoginForm(FlaskForm):
@@ -31,6 +34,7 @@ class JobsForm(FlaskForm):
     title = StringField('Название', validators=[DataRequired()])
     content = TextAreaField("Содержание")
     is_private = BooleanField("Приватность")
+    payment = IntegerField('Оплата за задание')
     submit = SubmitField('Применить')
 
 
@@ -42,7 +46,7 @@ class Category(SqlAlchemyBase):
 
 
 association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
-    sqlalchemy.Column('jobs', sqlalchemy.Integer, 
+    sqlalchemy.Column('jobs', sqlalchemy.Integer,
                       sqlalchemy.ForeignKey('jobs.id')),
     sqlalchemy.Column('category', sqlalchemy.Integer, 
                       sqlalchemy.ForeignKey('category.id'))
@@ -51,6 +55,8 @@ association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PASSWORD'
+app.config['UPLOAD_FOLDER'] = 'static/img'
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -72,7 +78,7 @@ def index():
 @app.route('/my_jobs')
 def my_jobs():
     jobs = session.query(Jobs).filter(
-        (Jobs.user == current_user) | (Jobs.is_private != True))
+        (Jobs.user == current_user) | (Jobs.is_private == True))
     return render_template("index.html", jobs=jobs)
 
 
@@ -112,6 +118,18 @@ def reqister():
         user.set_password(form.password.data)
         session.add(user)
         session.commit()
+
+        if request.files['file']:
+            user.is_ava = True
+            file = request.files['file']
+            path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.id}.png')
+            file.save(path)
+            file.close()
+
+            file = Image.open(path)
+            file.thumbnail((128, 128))
+            file.save(path)
+
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
@@ -129,10 +147,13 @@ def add_jobs():
     form = JobsForm()
     if form.validate_on_submit():
         session = db_session.create_session()
+
         jobs = Jobs()
         jobs.title = form.title.data
         jobs.content = form.content.data
         jobs.is_private = form.is_private.data
+        jobs.payment = form.payment.data
+
         current_user.jobs.append(jobs)
         session.merge(current_user)
         session.commit()

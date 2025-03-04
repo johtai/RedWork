@@ -23,6 +23,15 @@
             </p>
         {% endfor %}
     </p>
+    <p>
+        {{ form.payment.label }}<br>
+        {{ form.payment(class="form-control") }}<br>
+        {% for error in form.payment.errors %}
+            <p payment="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
     <p>{{ form.is_private() }} {{ form.is_private.label }}</p>
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
     {{message}}
