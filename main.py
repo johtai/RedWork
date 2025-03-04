@@ -231,7 +231,7 @@ def set_request(id):
 @login_required
 def my_requests():
     session = db_session.create_session()
-    jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user)[::-1]
+    jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user, Jobs.request != 0)[::-1]
     return render_template('requests.html', jobs=jobs, title='Мои запросы')
 
 
@@ -243,7 +243,7 @@ def requests_endorse(id, user):
     user = session.query(User).filter(User.id == user).first()
 
     job.is_complete = True
-    session.merge(user)
+    # session.merge(user)
     user.balance += job.payment
     session.merge(current_user)
     current_user.balance -= job.payment
