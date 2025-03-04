@@ -18,18 +18,22 @@
 
                 <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Услуги</font></a>
                 <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Работы</font></a>
-                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Форум</font></a>
+                <a style="border: 2px double lightgray" class='btn btn-default' href="/forum"><font size="4">Форум</font></a>
                 <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Помощь</font></a>
 
     </nav>
     <hr>
     <nav class="navbar">
-        {% if current_user.is_authenticated: %}
+        {% if current_user.is_authenticated and request.path != "/forum"  %}
             <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
             <a style="background: #a4d433" class='btn btn-default' href="">Категории</a>
             <a style="background: #c4ca76" class='btn btn-default' href="">Мои работы</a>
-            <a style="background: #c4ca76" class='btn btn-default' href="">Отложенные</a>
+            <a style="background: #c4ca76" class='btn btn-default' href="/defers">Отложенные</a>
             <a style="background: #aca16f" class='btn btn-default' href="/my_requests">Заявки</a>
+            <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
+            <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
+        {% elif current_user.is_authenticated and request.path == "/forum" %}
+            <a style="background: #76ca7d" class='btn' href="/theme_add">Добавить тему</a>
             <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
             <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% else %}

@@ -16,10 +16,15 @@
         <a href="/jobs/{{ item.id }}" class="btn btn-warning">Изменить</a>
         <a href="/jobs_delete/{{ item.id }}" class="btn btn-danger">Удалить</a>
     </div>
+    {% elif request.path == "/defers"%}
+    <div>
+        <a href="/requests/{{ item.id }}" class="btn btn-success">Выполняю!</a>
+        <a href="/defers_delete/{{ item.id }}" class="btn btn-war">Не хочу выполнять</a>
+    </div>
     {% elif current_user.is_authenticated %}
     <div>
         <a href="/requests/{{ item.id }}" class="btn btn-success">Выполняю!</a>
-        <a href="/" class="btn btn-default">Хочу выполнить</a>
+        <a href="/defers_add/{{ item.id }}" class="btn btn-default">Хочу выполнить</a>
     </div>
     {% endif %}
     </div>

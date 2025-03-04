@@ -20,6 +20,8 @@ class User(SqlAlchemyBase, UserMixin):
     created_date = sqlalchemy.Column(sqlalchemy.String,
                                      default=datetime.datetime.today().strftime("%d.%m.%Y %H:%M"))
     jobs = orm.relation("Jobs", back_populates='user')
+    theme = orm.relation("Theme", back_populates='creator')
+    defers = sqlalchemy.Column(sqlalchemy.String, default="")
     is_ava = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     balance = sqlalchemy.Column(sqlalchemy.Integer, default=0)
 

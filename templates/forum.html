@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for item in themes %}
+<br>
+<div class="col-md6 border rounded" style="padding: 1px 5px 5px 5px">
+    <h3>{{item.title}}</h3>
+    <div>
+        <a>Категория: {{ item.category }}</a><br>
+        <a>Автор: </a><a href="/user/{{ item.creator.id }}">{{ item.creator.name }}</a><br>
+    </div>
+    <br>
+    {% if current_user == item.creator %}
+    <div>
+        <a href="/theme_edit/{{ item.id }}" class="btn btn-warning">Изменить</a>
+        <a href="/theme_delete/{{ item.id }}" class="btn btn-danger">Удалить</a>
+    </div>
+    {% endif %}
+    </div>
+{% endfor %}
+{% endblock %}

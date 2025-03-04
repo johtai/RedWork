@@ -4,7 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired
 from data import db_session
 from data.db_session import SqlAlchemyBase
-from data.__all_models import User, Jobs
+from data.__all_models import User, Jobs, Theme
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from wtforms.fields.html5 import EmailField
@@ -38,19 +38,11 @@ class JobsForm(FlaskForm):
     submit = SubmitField('Применить')
 
 
-class Category(SqlAlchemyBase):
-    __tablename__ = 'category'
-    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, 
-                           autoincrement=True)
-    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
-
-association_table = sqlalchemy.Table('association', SqlAlchemyBase.metadata,
-    sqlalchemy.Column('jobs', sqlalchemy.Integer,
-                      sqlalchemy.ForeignKey('jobs.id')),
-    sqlalchemy.Column('category', sqlalchemy.Integer, 
-                      sqlalchemy.ForeignKey('category.id'))
-)
+class ThemeForm(FlaskForm):
+    title = StringField('Название', validators=[DataRequired()])
+    category = StringField('Категория', validators=[DataRequired()])
+    is_private = BooleanField("Приватность")
+    submit = SubmitField("Применить")
 
 
 app = Flask(__name__)
@@ -231,7 +223,7 @@ def set_request(id):
 def my_requests():
     session = db_session.create_session()
     jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user)
-    return render_template('requests.html', jobs=jobs)
+    return render_template('requests.html', jobs=jobs, title='Мои запросы')
 
 
 @app.route('/requests_endorse/<int:id><int:user>')
@@ -258,6 +250,106 @@ def requests_cancel(id):
     job.request = 0
     session.commit()
     return redirect('/my_requests')
+
+
+@app.route('/theme_add', methods=['GET', 'POST'])
+@login_required
+def add_forum():
+    form = ThemeForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+
+        theme = Theme()
+        theme.title = form.title.data
+        theme.user_id = current_user.id
+        theme.category = form.category.data
+        theme.is_private = form.is_private.data
+        session.add(theme)
+        session.commit()
+        return redirect('/forum')
+    return render_template('theme.html', title='Добавление тему на форум',
+                           form=form)
+
+
+@app.route('/theme_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def theme_delete(id):
+    session = db_session.create_session()
+    theme = session.query(Theme).filter(Theme.id == id,
+                                      Theme.creator == current_user).first()
+    if theme:
+        session.delete(theme)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/')
+
+
+@app.route('/theme_edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_theme(id):
+    form = ThemeForm()
+    if request.method == "GET":
+        session = db_session.create_session()
+        theme = session.query(Theme).filter(Theme.id == id,
+                                          Theme.creator == current_user).first()
+        if theme:
+            form.title.data = theme.title
+            form.category.data = theme.category
+            form.is_private.data = theme.is_private
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        theme = session.query(Theme).filter(Theme.id == id,
+                                          Theme.creator == current_user).first()
+        if theme:
+            theme.title = form.title.data
+            theme.category = form.category.data
+            theme.is_private = form.is_private.data
+            session.commit()
+            return redirect('/')
+        else:
+            abort(404)
+    return render_template('theme.html', title='Редактирование темы', form=form)
+
+
+@app.route('/forum')
+def forum():
+    session = db_session.create_session()
+    themes = session.query(Theme).all()
+    return render_template('forum.html', themes=themes)
+
+
+@app.route('/defers_add/<int:id>', methods=['GET', 'POST'])
+def set_defers(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == current_user.id).first()
+    user.defers += f",{id}"
+    session.commit()
+    return redirect('/defers')
+
+
+@app.route('/defers_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def defers_delete(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == current_user.id).first()
+    defers = user.defers.split(',')
+    defers.remove(str(id))
+    defers = ','.join(defers)
+    user.defers = defers
+    session.commit()
+    return redirect('/defers')
+
+
+@app.route('/defers')
+def defers():
+    session = db_session.create_session()
+    jobs = session.query(Jobs).all()
+    user = session.query(User).filter(User.id == current_user.id).first()
+    jobs = session.query(Jobs).filter(Jobs.id.in_(list(map(lambda x: int(x), user.defers.split(',')[1:]))))
+    return render_template('index.html', jobs=jobs)
 
 
 if __name__ == '__main__':
