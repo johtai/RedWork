@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-<h2>{{title}}:</h2>
 {% block content %}
+<h2>{{title}}:</h2>
+{% if jobs %}
 {% for item in jobs%}
 <br>
 <div class="col-md6 border rounded" style="padding: 1px 5px 5px 5px">
@@ -20,4 +21,7 @@
     </div>
 
 {% endfor %}
+    {% else %}
+    <h4>Похожу, что вам еще не поступали запросы</h4>
+    {% endif $}
 {% endblock %}

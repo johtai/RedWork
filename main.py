@@ -64,14 +64,14 @@ def load_user(user_id):
 def index():
     session = db_session.create_session()
     jobs = session.query(Jobs).filter(Jobs.is_private != True, Jobs.request == 0)
-    return render_template("index.html", jobs=jobs)
+    return render_template("index.html", jobs=jobs, title='Доступные работы')
 
 
 @app.route('/my_jobs')
 def my_jobs():
     jobs = session.query(Jobs).filter(
         (Jobs.user == current_user) | (Jobs.is_private == True))
-    return render_template("index.html", jobs=jobs)
+    return render_template("index.html", jobs=jobs, title='Мои работы')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -318,14 +318,15 @@ def edit_theme(id):
 def forum():
     session = db_session.create_session()
     themes = session.query(Theme).all()
-    return render_template('forum.html', themes=themes)
+    return render_template('forum.html', themes=themes, title='Форум')
 
 
 @app.route('/defers_add/<int:id>', methods=['GET', 'POST'])
 def set_defers(id):
     session = db_session.create_session()
     user = session.query(User).filter(User.id == current_user.id).first()
-    user.defers += f",{id}"
+    if str(id) not in user.defers.split(','):
+        user.defers += f",{id}"
     session.commit()
     return redirect('/defers')
 
@@ -349,7 +350,7 @@ def defers():
     jobs = session.query(Jobs).all()
     user = session.query(User).filter(User.id == current_user.id).first()
     jobs = session.query(Jobs).filter(Jobs.id.in_(list(map(lambda x: int(x), user.defers.split(',')[1:]))))
-    return render_template('index.html', jobs=jobs)
+    return render_template('index.html', jobs=jobs, title='Отложенные')
 
 
 if __name__ == '__main__':

@@ -1,5 +1,10 @@
 {% extends "base.html" %}
-<h2>{{title}}:</h2>
 {% block content %}
+<h2>{{title}}:</h2>
+{% if title == "Мои работы" %}
+<h4>Вы еще не публиковали работы</h4>
+{% elif title == "Отложенные" %}
+<h4>Вы еще не откладывали работы</h4>
+{% endif %}
 {% include "jobs_list.html"%}
 {% endblock %}
