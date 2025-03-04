@@ -4,7 +4,7 @@ from data.imports import *
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PASSWORD'
 app.config['UPLOAD_FOLDER'] = 'static\img'
-
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -46,6 +46,12 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def reqister():
     form = RegisterForm()
@@ -67,7 +73,8 @@ def reqister():
         user.set_password(form.password.data)
 
         session = db_session.create_session()
-        if request.files['file']:
+        file = request.files['file']
+        if file and allowed_file(file.filename):
             user.is_ava = True
             file = request.files['file']
             if not os.path.isdir(app.config['UPLOAD_FOLDER']):
@@ -128,6 +135,7 @@ def edit_jobs(id):
             form.title.data = jobs.title
             form.content.data = jobs.content
             form.is_private.data = jobs.is_private
+            form.payment.data = jobs.payment
         else:
             abort(404)
     if form.validate_on_submit():
@@ -138,6 +146,7 @@ def edit_jobs(id):
             jobs.title = form.title.data
             jobs.content = form.content.data
             jobs.is_private = form.is_private.data
+            form.payment.data = jobs.payment
             session.commit()
             return redirect('/')
         else:
