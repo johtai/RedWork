@@ -5,9 +5,10 @@
 <hr>
 <table>
     <tr valign="top">
-        {% if user.is_ava %}
-        <td><img src="../static/img/{{ user.id }}.png"></td>
+        {% if user.name %}
+        <td><img src="../static/img/{{ user.name }}.png"></td>
         {% else %}
+        <b>СУКА</b>
         <td><img src="{{ user.avatar(128)}}"></td>
         {% endif %}
         <td>

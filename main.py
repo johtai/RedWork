@@ -3,7 +3,7 @@ from data.imports import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PASSWORD'
-app.config['UPLOAD_FOLDER'] = 'static/img'
+app.config['UPLOAD_FOLDER'] = 'static\img'
 
 
 login_manager = LoginManager()
@@ -64,14 +64,17 @@ def reqister():
             email=form.email.data,
             about=form.about.data
         )
+        print(user, user.id)
         user.set_password(form.password.data)
 
+        session = db_session.create_session()
         if request.files['file']:
             user.is_ava = True
             file = request.files['file']
             if not os.path.isdir(app.config['UPLOAD_FOLDER']):
                 os.mkdir(app.config["UPLOAD_FOLDER"])
-            path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.id}.png')
+            path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.name}.png')
+            print(path)
             file.save(path)
             file.close()
 
