@@ -328,6 +328,20 @@ def help():
     return render_template('help.html', title='Вопросы и ответы')
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html', title='О нас')
+
+
+@app.route('/complete')
+@login_required
+def complete():
+    session = db_session.create_session()
+    jobs = session.query(Jobs).filter(Jobs.request == current_user.id, Jobs.is_complete == 1)
+    return render_template('index.html', title="Выполненные работы", jobs=jobs)
+
+
+
 @app.route('/question', methods=['GET', 'POST'])
 def question():
     form = QuestionForm()

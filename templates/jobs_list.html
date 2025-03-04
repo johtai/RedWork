@@ -21,7 +21,7 @@
         <a href="/requests/{{ item.id }}" class="btn btn-success">Выполняю!</a>
         <a href="/defers_delete/{{ item.id }}" class="btn btn-war">Не хочу выполнять</a>
     </div>
-    {% elif current_user.is_authenticated %}
+    {% elif current_user.is_authenticated and item.is_complete == 0%}
     <div>
         <a href="/requests/{{ item.id }}" class="btn btn-success">Выполняю!</a>
         <a href="/defers_add/{{ item.id }}" class="btn btn-default">Хочу выполнить</a>

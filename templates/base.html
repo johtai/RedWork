@@ -16,8 +16,7 @@
     <nav class="navbar navbar-light bg-light">
         <a href="/"><b><font size="6" color="cc0605">Red</font><font color="000000" size="6">Work</font></b></a>
 
-                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">Услуги</font></a>
-                <a style="border: 2px double lightgray" class='btn btn-default' href=""><font size="4">О нас</font></a>
+                <a style="border: 2px double lightgray" class='btn btn-default' href="/about"><font size="4">О нас</font></a>
                 <a style="border: 2px double lightgray" class='btn btn-default' href="/forum"><font size="4">Форум</font></a>
                 <a style="border: 2px double lightgray" class='btn btn-default' href="/help"><font size="4">Помощь</font></a>
 
@@ -26,7 +25,7 @@
     <nav class="navbar">
         {% if current_user.is_authenticated and request.path != "/forum" and request.path != "/help"  %}
             <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
-            <a style="background: #a4d433" class='btn btn-default' href="">Категории</a>
+            <a style="background: #a4d433" class='btn btn-default' href="/complete">Выполненные</a>
             <a style="background: #c4ca76" class='btn btn-default' href="/my_jobs">Мои работы</a>
             <a style="background: #c4ca76" class='btn btn-default' href="/defers">Отложенные</a>
             <a style="background: #aca16f" class='btn btn-default' href="/my_requests">Заявки</a>
@@ -54,10 +53,10 @@
 </main>
 <br><br>
     <nav class="navbar navbar-light bg-light">
-        <p>ВСЕ ПРАВА ЗАЩИЩЕНЫ<br>© 1917 – 2020 «RedWork»</p>
+        <p>ВСЕ ПРАВА ЗАЩИЩЕНЫ<br>© 1920 – 2020 «RedWork»</p>
         <p align="right">Исключительное право на программный код «RedWork», принадлежат АНО ДПО «RedWork».
             <br>
-            Воспроизведение, копирование, распространение и иное использование программы и материалов недопустимо.<br> Шутка =)
+            Воспроизведение, копирование, распространение и иное использование программы и материалов недопустимо.<br> =)
         </p>
     </nav>
 </body>
