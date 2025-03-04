@@ -45,6 +45,14 @@ class ThemeForm(FlaskForm):
     submit = SubmitField("Применить")
 
 
+class QuestionForm(FlaskForm):
+    theme = StringField('Тема/Категория')
+    title = StringField('Текст вопроса')
+    email = StringField('Ваша почта')
+    is_anon = BooleanField("Отправить анонимно?")
+    submit = SubmitField("Применить")
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'PASSWORD'
 app.config['UPLOAD_FOLDER'] = 'static/img'
@@ -352,6 +360,20 @@ def defers():
     user = session.query(User).filter(User.id == current_user.id).first()
     jobs = session.query(Jobs).filter(Jobs.id.in_(list(map(lambda x: int(x), user.defers.split(',')[1:]))))[::-1]
     return render_template('index.html', jobs=jobs, title='Отложенные')
+
+
+@app.route('/help')
+def help():
+    return render_template('help.html', title='Вопросы и ответы')
+
+
+@app.route('/question', methods=['GET', 'POST'])
+def question():
+    form = QuestionForm()
+
+    if form.validate_on_submit():
+        return redirect('/')
+    return render_template('question.html', form=form, title='Вопросы и ответы')
 
 
 if __name__ == '__main__':

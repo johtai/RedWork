@@ -9,7 +9,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
     <title>{{title}}</title>
-    <link rel="shortcut icon" href='https://yt3.ggpht.com/a/AGF-l79K11Q_IfhZ-Up-Nz9RawnLFosCJ8v0KRuoiA=s900-c-k-c0xffffffff-no-rj-mo'>
+    <link rel="shortcut icon" href='https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Red_trademark.svg/1200px-Red_trademark.svg.png'>
 </head>
 <body>
 <header>
@@ -24,7 +24,7 @@
     </nav>
     <hr>
     <nav class="navbar">
-        {% if current_user.is_authenticated and request.path != "/forum"  %}
+        {% if current_user.is_authenticated and request.path != "/forum" and request.path != "/help"  %}
             <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
             <a style="background: #a4d433" class='btn btn-default' href="">Категории</a>
             <a style="background: #c4ca76" class='btn btn-default' href="/my_jobs">Мои работы</a>
@@ -34,6 +34,10 @@
             <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% elif current_user.is_authenticated and request.path == "/forum" %}
             <a style="background: #76ca7d" class='btn' href="/theme_add">Добавить тему</a>
+            <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
+            <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
+        {% elif request.path == "/help" %}
+            <a style="background: #adff2f" class='btn' href="/question">Задать вопрос</a>
             <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
             <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% else %}
