@@ -20,6 +20,6 @@ class Jobs(SqlAlchemyBase):
                                 sqlalchemy.ForeignKey("users.id"))
     payment = sqlalchemy.Column(sqlalchemy.Integer)
     user = orm.relation('User')
-    categories = orm.relation("Category",
-                          secondary="association",
-                          backref="news")
+    request = sqlalchemy.Column(sqlalchemy.Integer, default=0)
+    request_name = sqlalchemy.Column(sqlalchemy.String, default='')
+    is_complete = sqlalchemy.Column(sqlalchemy.Boolean, refault=False)

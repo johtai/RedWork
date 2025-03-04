@@ -215,6 +215,27 @@ def jobs_delete(id):
     return redirect('/')
 
 
+@app.route('/requests_endorse/<int:id><int:user>')
+@login_required
+def requests_endorse(id, user):
+    session = db_session.create_session()
+    job = session.query(Jobs).filter(Jobs.id == id).first()
+    user = session.query(User).filter(User.id == user).first()
+
+    job.is_complete = True
+    session.merge(user)
+    user.balance += job.payment
+    session.merge(current_user)
+    current_user.balance -= job.payment
+    session.commit()
+
+
+@app.route('/requests_cancel/<int:id>')
+@login_required
+def requests_endorse(id):
+    pass
+
+
 if __name__ == '__main__':
     db_session.global_init("db/blogs.sqlite")
     app.run(port=8080, host='127.0.0.1')
