@@ -6,7 +6,7 @@
 <table>
     <tr valign="top">
         {% if user.is_ava == 1 %}
-        <td><img src="../static/img/{{ user.name }}.png"></td>
+        <td><img src="/static/img/{{ user.name }}.png"></td>
         {% else %}
         <td><img src="{{ user.avatar(128)}}"></td>
         {% endif %}
@@ -22,9 +22,9 @@
 </table>
 <hr>
 <nav class="navbar">
-    <a style="background: #808080" class='btn' href="/user/{{ current_user.id }}/complete">Выполненные</a>
-    <a style="background: #808080" class='btn' href="/user/{{ current_user.id }}/jobs">Добавленные</a>
-    <a style="background: #808080" class='btn' href="/user/{{ current_user.id }}/reviews">Отзывы</a>
+    <a style="background: #a4d433" class='btn' href="/user/{{ current_user.id }}/complete">Выполненные</a>
+    <a style="background: #c4ca76" class='btn' href="/user/{{ current_user.id }}/jobs">Добавленные</a>
+    <a style="background: #aca16f" class='btn' href="/user/{{ current_user.id }}/reviews">Отзывы</a>
 </nav>
 <br>
 {% if title == 'complete'%}
