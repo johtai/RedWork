@@ -329,7 +329,7 @@ def set_defers(id):
     if str(id) not in user.defers.split(','):
         user.defers += f",{id}"
     session.commit()
-    return redirect('/defers')
+    return redirect('/')
 
 
 @app.route('/defers_delete/<int:id>', methods=['GET', 'POST'])
