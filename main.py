@@ -64,7 +64,6 @@ def reqister():
             email=form.email.data,
             about=form.about.data
         )
-        print(user, user.id)
         user.set_password(form.password.data)
 
         session = db_session.create_session()
