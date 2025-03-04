@@ -71,23 +71,17 @@ def reqister():
             about=form.about.data
         )
         user.set_password(form.password.data)
-        print(1)
         file = request.files['ava']
-        print(2)
         if file and allowed_file(file.filename):
-            print(3)
             user.is_ava = True
             if not os.path.isdir(app.config['UPLOAD_FOLDER']):
                 os.mkdir(app.config["UPLOAD_FOLDER"])
             path = os.path.join(app.config['UPLOAD_FOLDER'], f'{user.name}.png')
-            print(path)
             file.save(path)
             file.close()
-
             file = Image.open(path)
             file.thumbnail((128, 128))
             file.save(path)
-        print(4)
         session.add(user)
         session.commit()
         login_user(user, remember=True)
