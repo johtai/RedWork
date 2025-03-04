@@ -24,7 +24,7 @@
         {% if current_user.is_authenticated: %}
             <a style="background: #76ca7d" class='btn' href="/jobs">Добавить работу</a>
             <a style="background: #c4ca76" class='btn btn-default' href="">Мои работы</a>
-            <a style="background: #aaaaaa" class='btn btn-default' href=''>Профиль</a>
+            <a style="background: #aaaaaa" class='btn btn-default' href='/user/{{ current_user.id }}'>Профиль</a>
             <a style="background: #ca7676" class='btn btn-default' href="/logout">Выйти</a>
         {% else %}
             <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
