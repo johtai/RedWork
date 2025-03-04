@@ -71,7 +71,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     session = db_session.create_session()
-    jobs = session.query(Jobs).filter(Jobs.is_private != True)
+    jobs = session.query(Jobs).filter(Jobs.is_private != True, Jobs.request == 0)
     return render_template("index.html", jobs=jobs)
 
 
@@ -215,6 +215,25 @@ def jobs_delete(id):
     return redirect('/')
 
 
+@app.route('/requests/<int:id>')
+@login_required
+def set_request(id):
+    session = db_session.create_session()
+    job = session.query(Jobs).filter(Jobs.id == id).first()
+    job.request = current_user.id
+    job.request_name = current_user.name
+    session.commit()
+    return redirect('/')
+
+
+@app.route('/my_requests')
+@login_required
+def my_requests():
+    session = db_session.create_session()
+    jobs = session.query(Jobs).filter(Jobs.is_complete == False, Jobs.user == current_user)
+    return render_template('requests.html', jobs=jobs)
+
+
 @app.route('/requests_endorse/<int:id><int:user>')
 @login_required
 def requests_endorse(id, user):
@@ -228,14 +247,19 @@ def requests_endorse(id, user):
     session.merge(current_user)
     current_user.balance -= job.payment
     session.commit()
+    return redirect('/my_requests')
 
 
 @app.route('/requests_cancel/<int:id>')
 @login_required
-def requests_endorse(id):
-    pass
+def requests_cancel(id):
+    session = db_session.create_session()
+    job = session.query(Jobs).filter(Jobs.id == id).first()
+    job.request = 0
+    session.commit()
+    return redirect('/my_requests')
 
 
 if __name__ == '__main__':
-    db_session.global_init("db/blogs.sqlite")
+    db_session.global_init("db/redwork.sqlite")
     app.run(port=8080, host='127.0.0.1')

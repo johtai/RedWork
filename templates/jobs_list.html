@@ -18,8 +18,8 @@
     </div>
     {% elif current_user.is_authenticated %}
     <div>
-        <a href="/jobs/{{ item.id }}" class="btn btn-success">Выполняю!</a>
-        <a href="/jobs_delete/{{ item.id }}" class="btn btn-default">Хочу выполнить</a>
+        <a href="/requests/{{ item.id }}" class="btn btn-success">Выполняю!</a>
+        <a href="/" class="btn btn-default">Хочу выполнить</a>
     </div>
     {% endif %}
     </div>

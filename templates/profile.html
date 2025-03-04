@@ -14,6 +14,9 @@
             <h2>{{ user.name }}</h2>
             <p>{{ user.about }}</p>
             <p>Дата регистрации: {{ user.created_date }}</p>
+            {% if current_user.id == user.id %}
+                <b>Баланс: {{ user.balance}} ₽</b>
+            {% endif %}
         </td>
     </tr>
 </table>

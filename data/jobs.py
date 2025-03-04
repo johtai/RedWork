@@ -22,4 +22,4 @@ class Jobs(SqlAlchemyBase):
     user = orm.relation('User')
     request = sqlalchemy.Column(sqlalchemy.Integer, default=0)
     request_name = sqlalchemy.Column(sqlalchemy.String, default='')
-    is_complete = sqlalchemy.Column(sqlalchemy.Boolean, refault=False)
+    is_complete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
